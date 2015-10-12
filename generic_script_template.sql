@@ -18,10 +18,10 @@ IF (@database  LIKE ('ReportServer$%'))
 IF (@compatabilityLevel NOT IN (110))
 	GOTO SPError_DatabaseCompatabilityLevel;
 
--- Script Body
+-- ====================================================================================================
 -- <SCRIPT GOES HERE!!!>
+-- ====================================================================================================
 
--- End of script
 GOTO SPEnd;
 
 SPError_SystemDatabase:
