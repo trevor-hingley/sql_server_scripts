@@ -15,17 +15,19 @@ IF (@database  IN ('master', 'tempdb', 'model', 'msdb'))
 IF (@database  LIKE ('ReportServer$%'))
     GOTO SPError_ReportingDatabase;
 
-IF (@compatabilityLevel NOT IN (110))
+IF (@compatabilityLevel NOT IN (90, 100, 110))
 	GOTO SPError_DatabaseCompatabilityLevel;
 
 -- ====================================================================================================
+DECLARE @tsql nvarchar(max);
+DECLARE @params nvarchar(max);
+DECLARE @browse_information_mode tinyint;
 
-DECLARE @tsql nvarchar(max) = '<TODO: Specify SQL whose schema you wish to check here!>';
-DECLARE @params nvarchar(max) = NULL;
-DECLARE @browse_information_mode tinyint = 0;
+SET @tsql = '<TODO: Specify SQL whose schema you wish to check here!>';
+SET @params = NULL;
+SET @browse_information_mode = 0;
 
 SELECT * FROM sys.dm_exec_describe_first_result_set(@tsql, @params, @browse_information_mode);
-
 -- ====================================================================================================
 
 GOTO SPEnd;

@@ -1,9 +1,24 @@
--- Run script from master
 USE master;
 GO
 
-DECLARE @database nvarchar(max) = N'<TODO: Add database name here>';
+-- Variables / initialisation
+DECLARE @compatabilityLevel		int
+DECLARE @severity				int = 15;
+DECLARE @state					int = 1;
+
+SELECT @compatabilityLevel = d.[compatibility_level]
+FROM sys.databases d
+WHERE d.database_id = DB_ID();
+
+-- Safety checks
+IF (@compatabilityLevel NOT IN (90, 100, 110))
+	GOTO SPError_DatabaseCompatabilityLevel;
+
+-- ====================================================================================================
+DECLARE @database nvarchar(max);
 DECLARE @sql nvarchar(max);
+
+SET @database = N'<TODO: Add database name here>';
 
 -- Set database to single user mode (killing any connections in the process)
 SET @sql =  N'ALTER DATABASE ' + @database + N'SET SINGLE_USER WITH ROLLBACK IMMEDIATE';
@@ -12,4 +27,14 @@ EXEC sp_executesql @stmt = @sql;
 -- Set database to multi-user mode
 SET @sql = N'ALTER DATABASE ' + @database + N'SET MULTI_USER';
 EXEC sp_executesql @stmt = @sql;
-GO
+-- ====================================================================================================
+
+GOTO SPEnd;
+
+SPError_DatabaseCompatabilityLevel:
+	RAISERROR('The database compatalibity level (version) is not compatible with this script!', @severity , @state);
+	GOTO SPEnd;
+
+SPEnd:
+    PRINT 'Script has completed!';
+	RETURN;
