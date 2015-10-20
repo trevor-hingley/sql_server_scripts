@@ -1,6 +1,6 @@
 -- Variables / initialisation
-DECLARE @database			nvarchar(max);
 DECLARE @compatabilityLevel	int;
+DECLARE @database			nvarchar(max);
 DECLARE @severity			int;
 DECLARE @state				int;
 
@@ -13,15 +13,17 @@ SET @severity = 15;
 SET @state = 1;
 
 -- Safety checks
-IF (@database  IN ('master', 'tempdb', 'model', 'msdb'))
+IF (@database IN ('master', 'tempdb', 'model', 'msdb'))
     GOTO SPError_SystemDatabase;
 
-IF (@database  LIKE ('ReportServer$%'))
+IF (@database LIKE ('ReportServer$%'))
     GOTO SPError_ReportingDatabase;
 
 IF (@compatabilityLevel NOT IN (110))
 	GOTO SPError_DatabaseCompatabilityLevel;
 
+-- ====================================================================================================
+-- SCRIPT START
 -- ====================================================================================================
 DECLARE @tsql nvarchar(max);
 DECLARE @params nvarchar(max);
@@ -32,6 +34,8 @@ SET @params = NULL;
 SET @browse_information_mode = 0;
 
 SELECT * FROM sys.dm_exec_describe_first_result_set(@tsql, @params, @browse_information_mode);
+-- ====================================================================================================
+-- SCRIPT END
 -- ====================================================================================================
 
 GOTO SPEnd;

@@ -1,6 +1,6 @@
 -- Variables / initialisation
-DECLARE @database			nvarchar(max);
 DECLARE @compatabilityLevel	int;
+DECLARE @database			nvarchar(max);
 DECLARE @severity			int;
 DECLARE @state				int;
 
@@ -13,15 +13,17 @@ SET @severity = 15;
 SET @state = 1;
 
 -- Safety checks
-IF (@database  IN ('master', 'tempdb', 'model', 'msdb'))
+IF (@database IN ('master', 'tempdb', 'model', 'msdb'))
     GOTO SPError_SystemDatabase;
 
-IF (@database  LIKE ('ReportServer$%'))
+IF (@database LIKE ('ReportServer$%'))
     GOTO SPError_ReportingDatabase;
 
 IF (@compatabilityLevel NOT IN (90, 100, 110))
 	GOTO SPError_DatabaseCompatabilityLevel;
 
+-- ====================================================================================================
+-- SCRIPT START
 -- ====================================================================================================
 DECLARE @pattern nvarchar(max);
 SET @pattern = '<TODO: Add search string here>';
@@ -39,6 +41,8 @@ ORDER BY
     s.[name]
     , t.[name]
     , c.[name];
+-- ====================================================================================================
+-- SCRIPT END
 -- ====================================================================================================
 
 GOTO SPEnd;

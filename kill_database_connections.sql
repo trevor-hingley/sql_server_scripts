@@ -18,6 +18,8 @@ IF (@compatabilityLevel NOT IN (90, 100, 110))
 	GOTO SPError_DatabaseCompatabilityLevel;
 
 -- ====================================================================================================
+-- SCRIPT START
+-- ====================================================================================================
 DECLARE @database nvarchar(max);
 DECLARE @sql nvarchar(max);
 
@@ -30,6 +32,8 @@ EXEC sp_executesql @stmt = @sql;
 -- Set database to multi-user mode
 SET @sql = N'ALTER DATABASE ' + @database + N' SET MULTI_USER';
 EXEC sp_executesql @stmt = @sql;
+-- ====================================================================================================
+-- SCRIPT END
 -- ====================================================================================================
 
 GOTO SPEnd;
