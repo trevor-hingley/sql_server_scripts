@@ -1,12 +1,16 @@
 -- Variables / initialisation
-DECLARE @database				nvarchar(max) = DB_NAME();
-DECLARE @compatabilityLevel		int
-DECLARE @severity				int = 15;
-DECLARE @state					int = 1;
+DECLARE @database			nvarchar(max);
+DECLARE @compatabilityLevel	int;
+DECLARE @severity			int;
+DECLARE @state				int;
 
 SELECT @compatabilityLevel = d.[compatibility_level]
 FROM sys.databases d
 WHERE d.database_id = DB_ID();
+
+SET @database = DB_NAME();
+SET @severity = 15;
+SET @state = 1;
 
 -- Safety checks
 IF (@database  IN ('master', 'tempdb', 'model', 'msdb'))
